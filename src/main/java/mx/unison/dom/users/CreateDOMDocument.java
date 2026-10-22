@@ -50,9 +50,12 @@ public class CreateDOMDocument {
 
     public static final void prettyPrint(Document xml) throws Exception {
         Transformer tf = TransformerFactory.newInstance().newTransformer();
+
         tf.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
         tf.setOutputProperty(OutputKeys.INDENT, "yes");
+
         Writer out = new StringWriter();
+
         tf.transform(new DOMSource(xml), new StreamResult(out));
         System.out.println( out.toString() );
     }

@@ -47,6 +47,13 @@ public class SimpleParsing {
             }
             Element root = document.getDocumentElement();
             System.out.printf("Root element: %s\n", root.getNodeName());
+            if( root.hasAttributes() ) {
+                NamedNodeMap attributes = root.getAttributes();
+                for (int j = 0; j < attributes.getLength(); j++) {
+                    Attr attr = (Attr) attributes.item(j);
+                    System.out.printf("\tAttribute: %s = %s\n", attr.getName(), attr.getValue());
+                }
+            }
 
             Node first = root.getFirstChild();
             printNode(first);
@@ -55,8 +62,18 @@ public class SimpleParsing {
             int len = nodeList.getLength();
             for (int i = 0; i < len; i++) {
                 Node nodo = nodeList.item(i);
-                printNode(nodo);
-
+                int type = nodo.getNodeType();
+                if(type == Node.ELEMENT_NODE) {
+                    Element element = (Element) nodo;
+                    if( element.hasAttributes() ) {
+                        NamedNodeMap attributes = element.getAttributes();
+                        for (int j = 0; j < attributes.getLength(); j++) {
+                            Attr attr = (Attr) attributes.item(j);
+                            System.out.printf("\tAttribute: %s = %s\n", attr.getName(), attr.getValue());
+                        }
+                    }
+                    processNode(nodo);
+                }
             }
 
         }
@@ -91,12 +108,19 @@ public class SimpleParsing {
                 Node node = children.item(i);
                 if (node.getNodeType() == Node.ELEMENT_NODE) {
                     Element element = (Element) node;
+                    if( element.hasAttributes() ) {
+                        NamedNodeMap attributes = element.getAttributes();
+                        for (int j = 0; j < attributes.getLength(); j++) {
+                            Attr attr = (Attr) attributes.item(j);
+                            System.out.printf("\tAttribute: %s = %s\n", attr.getName(), attr.getValue());
+                        }
+                    }
                     processNode(element);
                 }
                 if( node.getNodeType() == Node.TEXT_NODE ) {
                     Text text = (Text) node;
                     if( !text.isElementContentWhitespace() )
-                        System.out.printf("\tValue: %s\n",    node.getTextContent());
+                        System.out.printf("\tValue: '%s'\n",    node.getTextContent());
                 }
             }
         }
